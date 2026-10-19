@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- In-app logo: the launcher icon composition in a rounded square, cropped to the safe zone so it reads at small sizes.
+     Keep in sync with ic_launcher_background.xml / ic_launcher_foreground.xml. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+    <group
+        android:translateX="-18"
+        android:translateY="-18">
+        <path android:pathData="M34,18H74Q90,18 90,34V74Q90,90 74,90H34Q18,90 18,74V34Q18,18 34,18Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="18"
+                    android:startY="18"
+                    android:endX="90"
+                    android:endY="90">
+                    <item android:offset="0" android:color="#FF8E92FF" />
+                    <item android:offset="0.5" android:color="#FF6366F1" />
+                    <item android:offset="1" android:color="#FF4C1D95" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:pathData="M34,18H74Q90,18 90,34V74Q90,90 74,90H34Q18,90 18,74V34Q18,18 34,18Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:centerX="32"
+                    android:centerY="26"
+                    android:gradientRadius="50">
+                    <item android:offset="0" android:color="#59FFFFFF" />
+                    <item android:offset="1" android:color="#00FFFFFF" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="-8">
+
+        <!-- Back page -->
+        <group
+            android:pivotX="54"
+            android:pivotY="54"
+            android:rotation="12"
+            android:translateX="-3"
+            android:translateY="-1">
+            <path android:pathData="M42,33H66Q69,33 69,36V72Q69,75 66,75H42Q39,75 39,72V36Q39,33 42,33Z">
+                <aapt:attr name="android:fillColor">
+                    <gradient
+                        android:type="linear"
+                        android:startX="39"
+                        android:startY="33"
+                        android:endX="69"
+                        android:endY="75">
+                        <item android:offset="0" android:color="#FFE9E7FF" />
+                        <item android:offset="1" android:color="#FFB9B3F7" />
+                    </gradient>
+                </aapt:attr>
+            </path>
+        </group>
+
+        <!-- Drop shadow of the front page -->
+        <path
+            android:fillColor="#4D1E0B5E"
+            android:pathData="M44,36.5H64L71,43.5V75.5Q71,78.5 68,78.5H44Q41,78.5 41,75.5V39.5Q41,36.5 44,36.5Z" />
+
+        <!-- Front page with folded top-right corner -->
+        <path android:pathData="M42,33H62L69,40V72Q69,75 66,75H42Q39,75 39,72V36Q39,33 42,33Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="39"
+                    android:startY="33"
+                    android:endX="69"
+                    android:endY="75">
+                    <item android:offset="0" android:color="#FFFFFFFF" />
+                    <item android:offset="0.6" android:color="#FFF7F6FF" />
+                    <item android:offset="1" android:color="#FFDCD9FF" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:pathData="M62,33V37Q62,40 65,40H69Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="62"
+                    android:startY="33"
+                    android:endX="69"
+                    android:endY="40">
+                    <item android:offset="0" android:color="#FFC9C4FF" />
+                    <item android:offset="1" android:color="#FF8B83F2" />
+                </gradient>
+            </aapt:attr>
+        </path>
+
+        <!-- Title and text lines -->
+        <path
+            android:fillColor="#FF6366F1"
+            android:pathData="M44.2,38.2H54.8A1.2,1.2 0,0 1,54.8 40.6H44.2A1.2,1.2 0,0 1,44.2 38.2Z" />
+        <path
+            android:fillColor="#FFC8C4F4"
+            android:pathData="M44.1,45H63.9A1.1,1.1 0,0 1,63.9 47.2H44.1A1.1,1.1 0,0 1,44.1 45ZM44.1,50H60.9A1.1,1.1 0,0 1,60.9 52.2H44.1A1.1,1.1 0,0 1,44.1 50ZM44.1,55H63.9A1.1,1.1 0,0 1,63.9 57.2H44.1A1.1,1.1 0,0 1,44.1 55ZM44.1,67H56.9A1.1,1.1 0,0 1,56.9 69.2H44.1A1.1,1.1 0,0 1,44.1 67Z" />
+
+        <!-- Scan beam: soft glow above a bright line -->
+        <path android:pathData="M35,56H73V63.4H35Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="54"
+                    android:startY="56"
+                    android:endX="54"
+                    android:endY="63.4">
+                    <item android:offset="0" android:color="#0022D3EE" />
+                    <item android:offset="1" android:color="#5522D3EE" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path android:pathData="M34,62.4H74V64.6H34Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="linear"
+                    android:startX="34"
+                    android:startY="63.5"
+                    android:endX="74"
+                    android:endY="63.5">
+                    <item android:offset="0" android:color="#0067E8F9" />
+                    <item android:offset="0.5" android:color="#FF67E8F9" />
+                    <item android:offset="1" android:color="#0067E8F9" />
+                </gradient>
+            </aapt:attr>
+        </path>
+    </group>
+
+    <!-- Scanner brackets (not tilted: the page sits askew inside a straight frame) -->
+    <path
+        android:pathData="M33,35V30Q33,27 36,27H41M67,27H72Q75,27 75,30V35M75,73V78Q75,81 72,81H67M41,81H36Q33,81 33,78V73"
+        android:strokeWidth="3.2"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    </group>
+</vector>
