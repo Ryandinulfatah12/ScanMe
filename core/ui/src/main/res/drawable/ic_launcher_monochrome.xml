@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed-icon layer (Android 13+): single-colour silhouette of the page and brackets; the system tints it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="-8">
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M42,33H62L69,40V72Q69,75 66,75H42Q39,75 39,72V36Q39,33 42,33ZM44.1,45A1.1,1.1 0,0 0,44.1 47.2H63.9A1.1,1.1 0,0 0,63.9 45ZM44.1,50A1.1,1.1 0,0 0,44.1 52.2H60.9A1.1,1.1 0,0 0,60.9 50ZM44.1,55A1.1,1.1 0,0 0,44.1 57.2H63.9A1.1,1.1 0,0 0,63.9 55Z"
+            android:fillType="evenOdd" />
+    </group>
+    <path
+        android:pathData="M33,35V30Q33,27 36,27H41M67,27H72Q75,27 75,30V35M75,73V78Q75,81 72,81H67M41,81H36Q33,81 33,78V73"
+        android:strokeWidth="3.2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

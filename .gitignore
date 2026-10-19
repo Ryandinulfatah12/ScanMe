@@ -1,0 +1,49 @@
+# --- Gradle / Kotlin ---
+.gradle/
+**/build/
+.kotlin/
+!gradle/wrapper/gradle-wrapper.jar
+
+# --- Android ---
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+*.ap_
+*.aab
+output-metadata.json
+
+# Signing keys must never be committed.
+*.jks
+*.keystore
+keystore.properties
+
+# --- IDE ---
+.idea/
+*.iml
+.vscode/
+.fleet/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs & temp ---
+*.log
+*.tmp
+
+# --- Claude Code (per-user settings) ---
+.claude/settings.local.json
+
+# --- Reverse-engineering material ---
+# Reference APKs and anything extracted from them are proprietary third-party
+# artifacts used only for analysis (see AGENTS.md); never commit them.
+*.apk
+*.xapk
+*.apks
+*.apkm
+*.dex
+/reference/
+/decompiled/

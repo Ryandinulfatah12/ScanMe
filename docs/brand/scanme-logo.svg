@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 18 72 72" width="512" height="512">
+
+  <defs>
+    <linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="108" y2="108">
+      <stop offset="0" stop-color="#8E92FF"/><stop offset="0.5" stop-color="#6366F1"/><stop offset="1" stop-color="#4C1D95"/>
+    </linearGradient>
+    <radialGradient id="light" gradientUnits="userSpaceOnUse" cx="28" cy="22" r="62">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.35"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="back" gradientUnits="userSpaceOnUse" x1="39" y1="33" x2="69" y2="75">
+      <stop offset="0" stop-color="#E9E7FF"/><stop offset="1" stop-color="#B9B3F7"/>
+    </linearGradient>
+    <linearGradient id="front" gradientUnits="userSpaceOnUse" x1="39" y1="33" x2="69" y2="75">
+      <stop offset="0" stop-color="#FFFFFF"/><stop offset="0.6" stop-color="#F7F6FF"/><stop offset="1" stop-color="#DCD9FF"/>
+    </linearGradient>
+    <linearGradient id="fold" gradientUnits="userSpaceOnUse" x1="62" y1="33" x2="69" y2="40">
+      <stop offset="0" stop-color="#C9C4FF"/><stop offset="1" stop-color="#8B83F2"/>
+    </linearGradient>
+    <linearGradient id="glow" gradientUnits="userSpaceOnUse" x1="54" y1="56" x2="54" y2="63.4">
+      <stop offset="0" stop-color="#22D3EE" stop-opacity="0"/><stop offset="1" stop-color="#22D3EE" stop-opacity="0.33"/>
+    </linearGradient>
+    <linearGradient id="beam" gradientUnits="userSpaceOnUse" x1="34" y1="63.5" x2="74" y2="63.5">
+      <stop offset="0" stop-color="#67E8F9" stop-opacity="0"/><stop offset="0.5" stop-color="#67E8F9"/><stop offset="1" stop-color="#67E8F9" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="squircle"><path d="M34,18H74Q90,18 90,34V74Q90,90 74,90H34Q18,90 18,74V34Q18,18 34,18Z"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#squircle)">
+    <rect x="0" y="0" width="108" height="108" fill="url(#bg)"/>
+    <rect x="0" y="0" width="108" height="108" fill="url(#light)"/>
+
+  <g transform="rotate(-8 54 54)">
+    <g transform="translate(-3 -1) rotate(12 54 54)">
+      <path d="M42,33H66Q69,33 69,36V72Q69,75 66,75H42Q39,75 39,72V36Q39,33 42,33Z" fill="url(#back)"/>
+    </g>
+    <path d="M44,36.5H64L71,43.5V75.5Q71,78.5 68,78.5H44Q41,78.5 41,75.5V39.5Q41,36.5 44,36.5Z" fill="#1E0B5E" fill-opacity="0.30"/>
+    <path d="M42,33H62L69,40V72Q69,75 66,75H42Q39,75 39,72V36Q39,33 42,33Z" fill="url(#front)"/>
+    <path d="M62,33V37Q62,40 65,40H69Z" fill="url(#fold)"/>
+    <path d="M44.2,38.2H54.8A1.2,1.2 0,0 1,54.8 40.6H44.2A1.2,1.2 0,0 1,44.2 38.2Z" fill="#6366F1"/>
+    <path d="M44.1,45H63.9A1.1,1.1 0,0 1,63.9 47.2H44.1A1.1,1.1 0,0 1,44.1 45ZM44.1,50H60.9A1.1,1.1 0,0 1,60.9 52.2H44.1A1.1,1.1 0,0 1,44.1 50ZM44.1,55H63.9A1.1,1.1 0,0 1,63.9 57.2H44.1A1.1,1.1 0,0 1,44.1 55ZM44.1,67H56.9A1.1,1.1 0,0 1,56.9 69.2H44.1A1.1,1.1 0,0 1,44.1 67Z" fill="#C8C4F4"/>
+    <path d="M35,56H73V63.4H35Z" fill="url(#glow)"/>
+    <path d="M34,62.4H74V64.6H34Z" fill="url(#beam)"/>
+  </g>
+  <path d="M33,35V30Q33,27 36,27H41M67,27H72Q75,27 75,30V35M75,73V78Q75,81 72,81H67M41,81H36Q33,81 33,78V73" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  </g>
+</svg>
