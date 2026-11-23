@@ -67,6 +67,23 @@ Contact sheet visual per kategori: `core/imaging/build/test-output/pipeline_*.pn
   - Layar About: versi + daftar lisensi pustaka yang ikut di APK (semua Apache 2.0).
   - Skema Room berubah (kolom `photoRotation`, `thumbnailPath`) tanpa menaikkan versi DB: belum pernah ada yang menulis ke DB sebelumnya. Mulai sekarang perubahan skema butuh migrasi.
 
+## 5b. Uji di HP (23-11-2026, Samsung Galaxy A36 / SM-A366B, Android 17)
+
+| Kriteria | Hasil |
+|---|---|
+| Deteksi live < 50 ms/frame | 640 px: 54–81 ms (debug), **49–65 ms (rilis)** dengan kertas di frame. Diturunkan ke 576 px untuk live (foto tetap 640 px): **40–53 ms (rilis)**. Masih sesekali di atas 50 ms; langkah lanjut: profil per tahap, baseline profile |
+| Pipeline penuh < 2 s | 2308×2860 px: warp+dewarp 156–230 ms, filter 290–610 ms (preview 1600 px) → **< 1 s** |
+| Deteksi kertas nyata | Outline terkunci, "Dokumen terpotong" dan auto-capture bekerja |
+| Alur dokumen | Simpan → daftar → buka lagi (filter/intensitas utuh) → dialog Simpan/Buang → Buang tidak menghapus foto tersimpan ✔ |
+
+Diperbaiki dari uji ini:
+- Dokumen yang dibuka ulang selalu menampilkan "Tepi tidak terdeteksi".
+- Foto cache dari sesi yang prosesnya dimatikan tidak pernah dihapus (43 MB ditemukan); sekarang dibersihkan saat scanner dibuka.
+- Kamera (preview + analisis 30 fps) tetap menyala di bawah review/crop dan saat membuka dokumen tersimpan; sekarang hanya aktif saat layar kamera tampil. Thread callback kamera bocor setiap kunjungan; sekarang dimatikan.
+- Artefak garis vertikal di tepi atas/bawah hasil dewarp pada foto nyata; pergeseran sekarang diredam ke nol di tepi.
+
+Belum diperbaiki: APK **tidak 16 KB page-aligned** (`libopencv_java4.so` 4.9.0, `libc++_shared.so`; CameraX/androidx.graphics "unknown"). Android 17 menampilkan peringatan; Google Play mewajibkan 16 KB untuk target Android 15+. Butuh OpenCV versi yang 16 KB-aligned, yang bentrok dengan pin 4.9.0 untuk test desktop.
+
 ## 6. Langkah berikutnya
 
 1. Validasi dengan foto nyata (buku, bayangan, kusut, background ramai) lewat halaman debug; ukur waktu di device mid-range.

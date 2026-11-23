@@ -70,7 +70,8 @@ data class PageDraft(
 
 sealed interface ScanUiState {
     data object Camera : ScanUiState
-    data class Processing(val message: String) : ScanUiState
+    /** [fromCapture]: a just-taken photo is being processed, so the camera must stay bound until it is read. */
+    data class Processing(val message: String, val fromCapture: Boolean = false) : ScanUiState
     data class Review(
         val index: Int,
         val preview: Bitmap,
@@ -150,6 +151,9 @@ class ScannerViewModel @Inject constructor(
     private var renderJob: Job? = null
 
     init {
+        // Only one scanner exists at a time, so anything left here is from a session whose process was killed
+        // before onCleared ran (found 43 MB of such photos on a test phone).
+        photoDir.listFiles()?.forEach { it.delete() }
         documentId?.let(::openDocument)
     }
 
@@ -171,7 +175,9 @@ class ScannerViewModel @Inject constructor(
                     id = UUID.randomUUID().toString(),
                     photo = File(p.originalPath),
                     photoRotation = p.photoRotation,
-                    autoQuad = null,
+                    // The original detection is not stored; the saved outline stands in so review does not
+                    // claim "edges not detected" and Crop can reset to it.
+                    autoQuad = p.quad,
                     quad = p.quad,
                     rotation = p.rotationDegrees,
                     preset = p.filter.preset,
@@ -249,7 +255,7 @@ class ScannerViewModel @Inject constructor(
         liveQuadAtCapture = analyzer.detections.value?.quad
         analyzer.paused = true
         analyzer.onCaptured()
-        _ui.value = ScanUiState.Processing("Memproses…")
+        _ui.value = ScanUiState.Processing("Memproses…", fromCapture = true)
         return true
     }
 

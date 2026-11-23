@@ -36,7 +36,20 @@ class DewarpModel internal constructor(
     private val yMin: Double,
     private val yMax: Double,
 ) {
-    fun displacement(x: Double, y: Double): Double {
+    fun displacement(x: Double, y: Double): Double = raw(x, y) * edgeTaper(y)
+
+    /**
+     * 1 inside the text rows, falling linearly to 0 at the top and bottom image edges. Without it the
+     * displacement at the edge rows samples outside the image and BORDER_REPLICATE smears the last row into
+     * vertical streaks (clearly visible on real photos).
+     */
+    private fun edgeTaper(y: Double): Double = when {
+        y < yMin -> (y / yMin).coerceIn(0.0, 1.0)
+        y > yMax -> ((1 - y) / (1 - yMax)).coerceIn(0.0, 1.0)
+        else -> 1.0
+    }
+
+    private fun raw(x: Double, y: Double): Double {
         val xc = x.coerceIn(xMin, xMax)
         val yc = y.coerceIn(yMin, yMax)
         var d = 0.0

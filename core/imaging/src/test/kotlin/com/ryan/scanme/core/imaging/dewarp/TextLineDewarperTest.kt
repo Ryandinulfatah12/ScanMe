@@ -13,6 +13,7 @@ import kotlin.math.exp
 import kotlin.math.sin
 import kotlin.random.Random
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -46,6 +47,11 @@ class TextLineDewarperTest {
             val model = dewarper.estimate(curved)
             val estimateMs = (System.nanoTime() - start) / 1e6
             checkNotNull(model) { "seed $seed: no curl detected" }
+            // Edge rows must not sample outside the image (that smeared the border into streaks).
+            for (x in listOf(0.0, 0.5, 1.0)) {
+                assertEquals(0.0, model.displacement(x, 0.0), 1e-9)
+                assertEquals(0.0, model.displacement(x, 1.0), 1e-9)
+            }
             val flat = model.remap(curved)
             val flatLabels = model.remap(curvedLabels, Imgproc.INTER_NEAREST)
             val after = lineDeviation(flatLabels)

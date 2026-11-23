@@ -139,6 +139,8 @@ internal fun CameraContent(
             analysisExecutor.shutdown()
         }
     }
+    // One thread per camera visit; without this every return to the camera leaked an idle thread.
+    DisposableEffect(callbackExecutor) { onDispose { callbackExecutor.shutdown() } }
 
     fun takePicture() {
         val capture = imageCapture ?: return

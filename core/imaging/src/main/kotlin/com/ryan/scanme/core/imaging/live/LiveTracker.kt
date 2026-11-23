@@ -31,7 +31,13 @@ data class LiveFrameResult(
  * the stability timer keeps running during the hold so auto-capture is not reset by a single bad frame.
  */
 class LiveTracker(
-    private val detect: (Mat) -> DetectionResult = ClassicQuadDetector()::detect,
+    /**
+     * 576 px for the live overlay: 640 px measured 49-65 ms/frame with a page in view on a Galaxy A36
+     * (release build), over the 50 ms target. 512 px was faster still but left a cut-off page scoring right
+     * at [acquireScore] (0.60), so the "move back" hint could vanish; 576 keeps it at 0.72.
+     * The captured photo is still detected at 640 px.
+     */
+    private val detect: (Mat) -> DetectionResult = ClassicQuadDetector(maxSide = 576)::detect,
     private val acquireScore: Double = 0.6,
     private val trackScore: Double = 0.45,
     private val trackDistance: Double = 0.06,

@@ -46,7 +46,6 @@ import kotlinx.coroutines.delay
 
 /**
  * Scanner flow host: camera -> review (multi-page) -> crop, plus gallery import and PDF sharing.
- * The camera stays bound underneath the other screens so returning to it is instant.
  */
 @Composable
 fun ScannerScreen(
@@ -91,8 +90,12 @@ fun ScannerScreen(
     val close = { if (viewModel.hasUnsavedChanges()) confirmDiscard = true else onClose() }
     val debuggable = remember { context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 }
 
+    // The camera (preview + 30 fps analysis) runs only while it is on screen or a capture is being read;
+    // review, crop and saved documents leave it unbound. Re-opening it costs ~0.5 s, which beats the battery drain.
+    val cameraNeeded = ui == ScanUiState.Camera || (ui as? ScanUiState.Processing)?.fromCapture == true
+
     Box(modifier.fillMaxSize().background(Color.Black)) {
-        if (cameraGranted) {
+        if (cameraGranted && cameraNeeded) {
             CameraContent(viewModel, onCancel = close, onImport = openPicker, showTimings = debuggable)
         } else if (ui == ScanUiState.Camera) {
             PermissionContent(onGrant = { permission.launch(Manifest.permission.CAMERA) }, onImport = openPicker, onClose = close)
@@ -125,7 +128,7 @@ fun ScannerScreen(
             text = {
                 Text(
                     if (pages.isEmpty()) "Semua halaman dihapus. Dokumen tersimpan tidak diubah."
-                    else "${pages.size} halaman belum disimpan ke daftar dokumen.",
+                    else "Perubahan pada dokumen ini (${pages.size} halaman) belum disimpan.",
                 )
             },
             confirmButton = {
