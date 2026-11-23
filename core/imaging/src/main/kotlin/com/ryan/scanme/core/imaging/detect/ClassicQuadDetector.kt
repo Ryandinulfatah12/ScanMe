@@ -16,7 +16,7 @@ import org.opencv.imgproc.Imgproc
 
 /**
  * Parameter profiles for edge-based detection, mirroring the high/low-contrast split seen in the
- * reference app (docs/01-technique-analysis.md, section 4).
+ * reference app.
  *
  * The Canny high threshold is derived from the Otsu threshold of the blurred frame: Otsu sits between
  * paper and background brightness, so it scales with scene contrast instead of being a fixed number.

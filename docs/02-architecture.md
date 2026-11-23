@@ -1,6 +1,6 @@
 # Fase 2 — Arsitektur
 
-> Dasar: AGENTS.md (Fase 2), temuan `01-technique-analysis.md`, dan keputusan K1–K3 (dokumen saja, tanpa OCR, runtime TFLite/LiteRT).
+> Dasar: AGENTS.md (Fase 2), temuan Fase 1, dan keputusan K1–K3 (dokumen saja, tanpa OCR, runtime TFLite/LiteRT).
 > Dokumen ini adalah rancangan. Kode belum ditulis; scaffolding dimulai setelah dokumen ini disetujui.
 
 ## 1. Scope produk

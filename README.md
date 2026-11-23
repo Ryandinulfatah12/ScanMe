@@ -65,9 +65,8 @@ Catatan:
 
 ## Dokumentasi
 
-1. [Technique Analysis](docs/01-technique-analysis.md): analisis aplikasi referensi dan padanan open-source per tahap
-2. [Arsitektur](docs/02-architecture.md): scope, stack, modul, desain pipeline
-3. [Progres Fase 3](docs/03-phase3-progress.md): hasil test, temuan, keterbatasan, langkah berikutnya
+1. [Arsitektur](docs/02-architecture.md): scope, stack, modul, desain pipeline
+2. [Progres Fase 3](docs/03-phase3-progress.md): hasil test, temuan, keterbatasan, langkah berikutnya
 
 Aturan kerja proyek untuk agent ada di [`AGENTS.md`](AGENTS.md).
 
