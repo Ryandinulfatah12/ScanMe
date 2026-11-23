@@ -37,7 +37,8 @@ class ScanPipelineTest {
             val detectMs = (System.nanoTime() - start) / 1e6
 
             val t0 = System.nanoTime()
-            val page = pipeline.rectify(scene.image, ProcessRequest(best.quad))
+            // Dewarp on for every scene: it must straighten the book and leave the others intact.
+            val page = pipeline.rectify(scene.image, ProcessRequest(best.quad, dewarp = true))
             val rectifyMs = (System.nanoTime() - t0) / 1e6
             val outputs = FilterPreset.entries.filter { it != FilterPreset.ORIGINAL }.map { preset ->
                 val t1 = System.nanoTime()

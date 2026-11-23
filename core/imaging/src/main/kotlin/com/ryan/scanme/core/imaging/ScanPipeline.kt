@@ -3,7 +3,7 @@ package com.ryan.scanme.core.imaging
 import com.ryan.scanme.core.imaging.detect.ClassicQuadDetector
 import com.ryan.scanme.core.imaging.detect.DetectionResult
 import com.ryan.scanme.core.imaging.dewarp.Dewarper
-import com.ryan.scanme.core.imaging.dewarp.NoOpDewarper
+import com.ryan.scanme.core.imaging.dewarp.TextLineDewarper
 import com.ryan.scanme.core.imaging.enhance.FilterEngine
 import com.ryan.scanme.core.imaging.enhance.FilterSettings
 import com.ryan.scanme.core.imaging.geometry.Quad
@@ -30,7 +30,7 @@ data class ProcessRequest(
 class ScanPipeline(
     private val detector: ClassicQuadDetector = ClassicQuadDetector(),
     private val corrector: PerspectiveCorrector = PerspectiveCorrector(),
-    private val dewarper: Dewarper = NoOpDewarper,
+    private val dewarper: Dewarper = TextLineDewarper(),
     private val filters: FilterEngine = FilterEngine(),
 ) {
     fun detect(image: Mat, debug: DebugSink? = null): DetectionResult = detector.detect(image, debug)

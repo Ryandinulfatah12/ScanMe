@@ -29,6 +29,7 @@ data class PdfPageSource(
     val rotationDegrees: Int,
     val filter: FilterSettings,
     val focalLengthPx: Double?,
+    val dewarp: Boolean,
 )
 
 /** A page already rendered to its final PDF JPEG, stored in the app cache. */
@@ -50,7 +51,7 @@ class PdfExporter @Inject constructor(
     fun renderPage(src: PdfPageSource): RenderedPage {
         val photo = processor.loadPhoto(src.photo, src.photoRotation)
         val page = try {
-            processor.rectify(photo, src.quad, src.rotationDegrees, src.focalLengthPx, maxLongSide = EXPORT_LONG_SIDE)
+            processor.rectify(photo, src.quad, src.rotationDegrees, src.focalLengthPx, src.dewarp, maxLongSide = EXPORT_LONG_SIDE)
         } finally {
             photo.release()
         }

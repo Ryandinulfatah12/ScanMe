@@ -8,4 +8,6 @@ android {
 
 dependencies {
     implementation(project(":core:imaging"))
+    implementation(libs.opencv.android)
+    implementation(libs.androidx.activity.compose)
 }

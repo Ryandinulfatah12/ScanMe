@@ -33,6 +33,7 @@ import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.IosShare
 import androidx.compose.material.icons.outlined.Rotate90DegreesCw
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -180,6 +181,12 @@ internal fun ReviewContent(
             ToolbarAction(Icons.Outlined.CameraAlt, "Ulangi", viewModel::retake)
             ToolbarAction(Icons.Outlined.Crop, "Crop", viewModel::startCrop)
             ToolbarAction(Icons.Outlined.Rotate90DegreesCw, "Putar", viewModel::rotate)
+            ToolbarAction(
+                Icons.Outlined.Straighten,
+                if (page.dewarp) "Lurus: on" else "Lurus: off",
+                viewModel::toggleDewarp,
+                tint = if (page.dewarp) ScanMeColors.Accent else ScanMeColors.Muted,
+            )
             ToolbarAction(Icons.Outlined.DeleteOutline, "Hapus", viewModel::deletePage, tint = ScanMeColors.Danger)
         }
     }

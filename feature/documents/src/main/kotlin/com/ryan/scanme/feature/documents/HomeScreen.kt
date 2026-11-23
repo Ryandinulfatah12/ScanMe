@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.AlertDialog
@@ -47,6 +48,8 @@ fun HomeScreen(
     onScan: () -> Unit,
     onImport: () -> Unit,
     modifier: Modifier = Modifier,
+    /** Pipeline debug screen; null hides the button (release builds). */
+    onDebug: (() -> Unit)? = null,
 ) {
     var showHelp by remember { mutableStateOf(false) }
 
@@ -66,6 +69,11 @@ fun HomeScreen(
                 Spacer(Modifier.width(10.dp))
                 Text("ScanMe", style = MaterialTheme.typography.titleLarge, color = ScanMeColors.Ink)
                 Spacer(Modifier.weight(1f))
+                onDebug?.let {
+                    IconButton(onClick = it) {
+                        Icon(Icons.Outlined.BugReport, contentDescription = "Pipeline debug", tint = ScanMeColors.Muted)
+                    }
+                }
                 IconButton(onClick = { showHelp = true }) {
                     Icon(Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = "Bantuan", tint = ScanMeColors.Ink)
                 }

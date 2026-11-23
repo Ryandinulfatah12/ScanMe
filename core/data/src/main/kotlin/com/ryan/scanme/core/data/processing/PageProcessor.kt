@@ -57,7 +57,7 @@ class PageProcessor @Inject constructor() {
      * the page comes out at about that size: warping a 12-50 MP photo only to downscale afterwards wastes
      * most of the work, and shrinking first also avoids aliasing that warping straight to a smaller size causes.
      */
-    fun rectify(photo: Mat, quad: Quad, rotationDegrees: Int, focalLengthPx: Double?, maxLongSide: Int? = null): RectifiedPage {
+    fun rectify(photo: Mat, quad: Quad, rotationDegrees: Int, focalLengthPx: Double?, dewarp: Boolean, maxLongSide: Int? = null): RectifiedPage {
         val start = System.currentTimeMillis()
         val q = quad.toPixels(photo.cols(), photo.rows())
         val pageLongSide = maxOf(q.tl.distanceTo(q.tr), q.bl.distanceTo(q.br), q.tl.distanceTo(q.bl), q.tr.distanceTo(q.br))
@@ -68,7 +68,7 @@ class PageProcessor @Inject constructor() {
             photo
         }
         try {
-            val request = ProcessRequest(quad = quad, rotationDegrees = rotationDegrees, focalLengthPx = focalLengthPx?.times(scale))
+            val request = ProcessRequest(quad = quad, rotationDegrees = rotationDegrees, dewarp = dewarp, focalLengthPx = focalLengthPx?.times(scale))
             return RectifiedPage(pipeline.rectify(source, request), System.currentTimeMillis() - start)
         } finally {
             if (source !== photo) source.release()

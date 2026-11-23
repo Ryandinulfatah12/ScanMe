@@ -56,6 +56,8 @@ data class PageDraft(
     /** User rotation of the finished page, multiple of 90. */
     val rotation: Int = 0,
     val preset: FilterPreset = FilterPreset.AUTO_COLOR,
+    /** Straighten curved text lines; a no-op on flat pages, so on by default. */
+    val dewarp: Boolean = true,
     val focalLengthPx: Double?,
     val thumbnail: Bitmap? = null,
 )
@@ -297,6 +299,12 @@ class ScannerViewModel @Inject constructor(
         showPage(page.id, reRectify = true)
     }
 
+    fun toggleDewarp() {
+        val page = currentPage() ?: return
+        updatePage(page.id) { it.copy(dewarp = !it.dewarp) }
+        showPage(page.id, reRectify = true)
+    }
+
     fun deletePage() {
         val page = currentPage() ?: return
         val index = _pages.value.indexOfFirst { it.id == page.id }
@@ -382,12 +390,12 @@ class ScannerViewModel @Inject constructor(
     // ---- background PDF rendering ---------------------------------------------------------------
 
     /** Edits that change a page's PDF image. */
-    private data class ExportKey(val quad: Quad, val rotation: Int, val preset: FilterPreset)
+    private data class ExportKey(val quad: Quad, val rotation: Int, val preset: FilterPreset, val dewarp: Boolean)
 
-    private fun PageDraft.exportKey() = ExportKey(quad, rotation, preset)
+    private fun PageDraft.exportKey() = ExportKey(quad, rotation, preset, dewarp)
 
     private fun PageDraft.source() =
-        PdfPageSource(photo, photoRotation, quad, rotation, FilterSettings(preset), focalLengthPx)
+        PdfPageSource(photo, photoRotation, quad, rotation, FilterSettings(preset), focalLengthPx, dewarp)
 
     /** The page's final JPEG: cached if its edits are unchanged, otherwise rendered now and cached. */
     private fun renderedFor(page: PageDraft): RenderedPage {
@@ -450,7 +458,7 @@ class ScannerViewModel @Inject constructor(
                         ensurePhoto(page)
                         if (reRectify || rectified == null) {
                             rectified?.release()
-                            rectified = processor.rectify(checkNotNull(photo), page.quad, page.rotation, page.focalLengthPx)
+                            rectified = processor.rectify(checkNotNull(photo), page.quad, page.rotation, page.focalLengthPx, page.dewarp)
                         }
                         val r = checkNotNull(rectified)
                         val start = System.currentTimeMillis()

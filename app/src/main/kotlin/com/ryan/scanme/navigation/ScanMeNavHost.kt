@@ -31,8 +31,10 @@ fun ScanMeNavHost(modifier: Modifier = Modifier) {
             HomeScreen(
                 onScan = { nav.navigate(Routes.scanner(import = false)) },
                 onImport = { nav.navigate(Routes.scanner(import = true)) },
+                onDebug = DEBUG_ROUTE?.let { route -> { nav.navigate(route) } },
             )
         }
+        debugDestinations(nav)
         composable(
             Routes.SCANNER,
             arguments = listOf(navArgument("import") { type = NavType.BoolType; defaultValue = false }),

@@ -26,7 +26,7 @@ Sampel: generator scene **sintetis** (6 kategori, foto A4 diproyeksikan kamera p
 | Warna stempel/logo natural | — | stempel merah a=187 (netral 128); logo biru tetap gelap (L* 33) dan biru (b=75) |
 | B&W | — | recall tinta 100%, noise di kertas 0% |
 | Rasio aspek | — | tepat (< 0,5%) dengan focal length dari metadata kamera; < 2% self-calibrated; < 3% dengan prior |
-| Deviasi baseline dewarp | < 2% tinggi halaman | **belum** (dewarp = langkah 6) |
+| Deviasi baris teks dewarp | < 2% tinggi halaman | **0,27–0,29%** (sebelum dewarp 3,3–3,8%; curl buku non-polinomial, 3 seed; diukur dari label ground truth per baris). Estimasi 10–17 ms di desktop |
 | Pipeline penuh < 2 s | device mid-range | ~70–120 ms per filter di desktop untuk halaman ~820×1160 px; perlu diukur ulang di resolusi kamera penuh dan di device |
 
 Contact sheet visual per kategori: `core/imaging/build/test-output/pipeline_*.png` (dibuat ulang setiap `./gradlew :core:imaging:test`).
@@ -46,9 +46,23 @@ Contact sheet visual per kategori: `core/imaging/build/test-output/pipeline_*.pn
 - APK debug 138,7 MB karena OpenCV native untuk 4 ABI. Untuk rilis: distribusi AAB atau `abiFilters` (arm64-v8a, armeabi-v7a).
 - Semua angka di atas dari sampel sintetis; wajib divalidasi dengan foto nyata.
 
-## 5. Langkah berikutnya
+## 5. Pembaruan 23-11-2026
 
-3. `:feature:debug` — tampilan tiap tahap pipeline + slider parameter (tuning).
-4. Kamera live + auto-capture (`:core:camera`, `:feature:scanner`), termasuk focal length dari metadata.
-5. Editor, daftar dokumen, export PDF/JPG.
-6. Dewarp klasik (opsi A), lalu ML setelah lisensi terverifikasi.
+- **Langkah 3 selesai** — `:feature:debug` (hanya build debug, ikon bug di Home): foto galeri → semua tahap `DebugCollector` berdampingan, waktu per tahap, skor deteksi, median L\* kertas (target > 90), slider parameter filter.
+- **Langkah 4 selesai** — kamera live, auto-capture, crop, review multi-halaman, focal length dari metadata (sudah ada sebelumnya, belum tercatat di sini).
+- **Langkah 5 sebagian** — export PDF + share sudah ada; layar editor (loupe, slider intensitas) dan daftar dokumen tersimpan (Room) belum.
+- **Langkah 6 (opsi A) selesai** — `TextLineDewarper`:
+  1. adaptive threshold (window 3% lebar, C 15) → closing horizontal 2,5% lebar (lebih lebar dari spasi kata, tinggi 1 px agar baris tidak menyatu) → opening 1×3 (memutus jembatan descender/ascender);
+  2. komponen lebar ≥ 8% dan tebal rata-rata ≤ 3,5% tinggi = baris (garis tabel ikut dipakai);
+  3. sampel centroid tinta per kolom (~1/60 lebar);
+  4. least squares medan pergeseran vertikal D(x,y) = Σ a·(xʲ − 1/(j+1))·yᵏ, j = 1..3, k ≤ 2 (derajat y turun bila baris hanya menutup sebagian tinggi), satu putaran buang outlier > 3×RMS;
+  5. D dievaluasi di grid 1/8, di-upsample, lalu satu `remap`.
+  Halaman dibiarkan apa adanya bila < 3 baris, lengkung < 0,4% (halaman datar), atau > 15% (fit tidak masuk akal). Toggle "Lurus" di layar review (default on), ikut ke export PDF.
+  Keterbatasan: hanya koreksi vertikal — kompresi horizontal dekat punggung buku tetap (opsi B / model 3D bila perlu); beberapa piksel artefak border di tepi atas halaman yang tepinya melengkung; kertas kusut lokal tidak terkoreksi (polinomial global).
+
+## 6. Langkah berikutnya
+
+1. Validasi dengan foto nyata (buku, bayangan, kusut, background ramai) lewat halaman debug; ukur waktu di device mid-range.
+2. Editor (drag sudut + loupe, slider intensitas) dan daftar dokumen tersimpan (Room, rename, reorder).
+3. Layar About dengan daftar lisensi.
+4. Dewarp ML (opsi B) setelah lisensi model terverifikasi.
