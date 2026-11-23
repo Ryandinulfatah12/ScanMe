@@ -6,22 +6,23 @@
 
 Aplikasi Android document scanner yang menghasilkan gambar setara hasil scanner flatbed: deteksi tepi real-time, koreksi perspektif, dewarping, penghapusan bayangan, dan filter warna, lalu export ke PDF/JPG. Seluruh pipeline ditulis ulang dengan library open-source berlisensi permisif (Apache 2.0 / MIT / BSD).
 
-> **Status:** Fase 3 sedang berjalan. Pipeline klasik di `:core:imaging` sudah lengkap (kecuali dewarp) dan teruji pada sampel sintetis. Layar kamera, editor, daftar dokumen, dan export masih placeholder. Detail: [`docs/03-phase3-progress.md`](docs/03-phase3-progress.md).
+> **Status:** Fase 3 sedang berjalan. Pipeline klasik (termasuk dewarp) dan aplikasi lengkap (kamera, editor, daftar dokumen, export) sudah jalan dan diuji di HP (Galaxy A36). Sisa: dewarp ML (opsi B), deteksi live yang masih kadang > 50 ms/frame, dan keystore rilis untuk Google Play. Detail: [`docs/03-phase3-progress.md`](docs/03-phase3-progress.md).
 
 ## Fitur
 
 | Fitur | Status |
 |---|---|
-| Deteksi tepi dokumen (Canny + region, refinement sisi, scoring, fusi) | ✅ pipeline |
-| Stabilisasi sudut antar frame (One-Euro) + state machine auto-capture | ✅ pipeline |
-| Koreksi perspektif dengan estimasi rasio aspek (Zhang–He) | ✅ pipeline |
-| Normalisasi iluminasi / hapus bayangan (Lab, masker objek, push-pull fill) | ✅ pipeline |
-| Filter Original, Auto Color, Grayscale, B&W (Sauvola) | ✅ pipeline |
-| Dewarping halaman melengkung (klasik, lalu ML) | ⏳ |
-| Kamera live + overlay poligon + auto-capture + batch | ⏳ |
-| Editor: crop 4 sudut + loupe, rotasi, slider intensitas filter | ⏳ |
-| Daftar dokumen, rename, reorder, share, export PDF/JPG | ⏳ |
-| Halaman debug output tiap tahap pipeline (build debug saja) | ⏳ |
+| Deteksi tepi dokumen (Canny + region, refinement sisi, scoring, fusi) | ✅ |
+| Stabilisasi sudut antar frame (One-Euro) + state machine auto-capture | ✅ |
+| Koreksi perspektif dengan estimasi rasio aspek (Zhang–He) | ✅ |
+| Normalisasi iluminasi / hapus bayangan (Lab, masker objek, push-pull fill) | ✅ |
+| Filter Original, Auto Color, Grayscale, B&W (Sauvola) | ✅ |
+| Dewarping halaman melengkung | ✅ klasik (baris teks) · ⏳ ML |
+| Kamera live + overlay poligon + auto-capture + batch | ✅ |
+| Editor: crop 4 sudut + loupe, rotasi, slider intensitas filter | ✅ |
+| Daftar dokumen, rename, reorder, share, export PDF/JPG | ✅ |
+| Halaman debug output tiap tahap pipeline (build debug saja) | ✅ |
+| Layar About dengan daftar lisensi | ✅ |
 
 ## Tech stack
 
@@ -59,8 +60,8 @@ Prasyarat: JDK 17, Android SDK (API 35). Buat `local.properties` berisi `sdk.dir
 Di Windows gunakan `gradlew.bat`. Setelah `:core:imaging:test`, contact sheet visual per kategori sampel tersimpan di `core/imaging/build/test-output/pipeline_*.png`.
 
 Catatan:
-- APK debug berukuran besar (~139 MB) karena OpenCV native untuk 4 ABI. Build release membatasi ke `arm64-v8a` dan `armeabi-v7a`.
-- Build release saat ini ditandatangani dengan keystore debug, khusus untuk uji lokal. Ganti dengan keystore rilis sebelum distribusi.
+- APK debug berukuran besar (~163 MB) karena OpenCV native untuk 4 ABI. Build release membatasi ke `arm64-v8a` dan `armeabi-v7a` (APK ~43 MB, AAB ~22 MB).
+- Build release memakai keystore dari `keystore.properties` (tidak ikut git: `storeFile`, `storePassword`, `keyAlias`, `keyPassword`). Tanpa file itu build release ditandatangani kunci debug: bisa di-sideload, tapi ditolak Google Play.
 - OpenCV 4.14.0: AAR Android-nya 16 KB page-aligned (syarat Google Play untuk target Android 15+). Test JVM memakai build desktop bytedeco dengan versi OpenCV yang sama (`org.bytedeco:opencv:4.14.0-1.5.14`); keduanya harus selalu dinaikkan bersamaan.
 
 ## Dokumentasi
