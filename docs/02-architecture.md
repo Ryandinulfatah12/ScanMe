@@ -82,7 +82,7 @@ Modul tambahan bisa digabung kembali kalau Anda lebih suka mengikuti daftar AGEN
 
 - `:core:imaging` memakai **API Java OpenCV** (`org.opencv.core.Mat` dan seterusnya) sebagai `compileOnly`.
 - **Di aplikasi**, kelas dan native-nya disediakan oleh AAR `org.opencv:opencv`.
-- **Di unit test JVM**, disediakan oleh artefak OpenCV desktop yang menyertakan native Windows/Linux/macOS (mis. `org.openpnp:opencv`, BSD/Apache).
+- **Di unit test JVM**, disediakan oleh artefak OpenCV desktop yang menyertakan native Windows/Linux/macOS (`org.bytedeco:opencv`, Apache 2.0; versi OpenCV sama dengan AAR Android).
 - Kedua artefak **harus satu versi mayor.minor** OpenCV. Ini dicek di version catalog, dan ada test kecil yang membandingkan `Core.VERSION`.
 - Risiko: artefak desktop bisa tertinggal versinya. Alternatif bila tidak cocok: test di `:core:imaging` dijalankan sebagai instrumented test di emulator. Lebih lambat, tapi tetap tanpa UI.
 

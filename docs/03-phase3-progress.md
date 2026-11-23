@@ -33,7 +33,7 @@ Contact sheet visual per kategori: `core/imaging/build/test-output/pipeline_*.pn
 
 ## 3. Temuan & keputusan selama implementasi
 
-1. **OpenCV dipin ke 4.9.0** (Android AAR dan desktop untuk test). Artefak desktop `org.openpnp:opencv` hanya sampai 4.9.0. Upgrade ke 4.10+ butuh sumber native desktop lain (mis. bytedeco) atau test instrumented.
+1. **OpenCV** awalnya dipin ke 4.9.0 karena artefak desktop `org.openpnp:opencv` hanya sampai versi itu. Per 23-11-2026 dinaikkan ke **4.14.0** (AAR 16 KB-aligned) dengan build desktop bytedeco `4.14.0-1.5.14` untuk test.
 2. **Rasio aspek butuh focal length.** Rumus Zhang–He tidak bisa menghitung focal saat kamera hanya pitch/yaw murni. Solusi: `ProcessRequest.focalLengthPx` diisi dari metadata kamera (CameraX/Camera2); fallback self-calibration, lalu prior 0,8 × sisi panjang. Untuk impor galeri: pakai EXIF `FocalLengthIn35mmFilm` bila ada.
 3. **Logo/area gelap besar sempat terhapus jadi abu-abu** oleh normalisasi iluminasi. Diperbaiki dengan masker objek: region yang dikelilingi tepi tajam dan lebih gelap dari kertas sekitarnya dikeluarkan dari estimasi latar, lalu diisi push-pull. Test regresi ditambahkan.
 4. **Bias sudut dari hull** (2–4 px) membuat kandidat yang benar kalah skor pada background ramai. Diperbaiki dengan `QuadRefiner` (fit garis per sisi) + pencarian edge tegak lurus di scorer.
@@ -82,7 +82,7 @@ Diperbaiki dari uji ini:
 - Kamera (preview + analisis 30 fps) tetap menyala di bawah review/crop dan saat membuka dokumen tersimpan; sekarang hanya aktif saat layar kamera tampil. Thread callback kamera bocor setiap kunjungan; sekarang dimatikan.
 - Artefak garis vertikal di tepi atas/bawah hasil dewarp pada foto nyata; pergeseran sekarang diredam ke nol di tepi.
 
-Belum diperbaiki: APK **tidak 16 KB page-aligned** (`libopencv_java4.so` 4.9.0, `libc++_shared.so`; CameraX/androidx.graphics "unknown"). Android 17 menampilkan peringatan; Google Play mewajibkan 16 KB untuk target Android 15+. Butuh OpenCV versi yang 16 KB-aligned, yang bentrok dengan pin 4.9.0 untuk test desktop.
+16 KB page size: dengan OpenCV 4.9.0 hanya `libopencv_java4.so` dan `libc++_shared.so` (keduanya dari AAR OpenCV) yang `LOAD 0x1000`; library CameraX/androidx sudah `0x4000` (status "unknown" di dialog Android hanya kesalahan pemeriksa). **Diperbaiki** dengan OpenCV 4.14.0: semua `.so` di APK rilis `LOAD 0x4000`, `zipalign -c -P 16` lulus, semua test lulus, OpenCV 4.14.0 termuat di HP. APK rilis 36,9 → 43,1 MB.
 
 ## 6. Langkah berikutnya
 

@@ -6,7 +6,8 @@ import java.io.File
 
 object OpenCvTestSupport {
     init {
-        nu.pattern.OpenCV.loadLocally()
+        // Loads bytedeco's desktop natives for the official org.opencv Java API.
+        org.bytedeco.javacpp.Loader.load(org.bytedeco.opencv.opencv_java::class.java)
     }
 
     /** Call from tests (e.g. in a companion init) to make sure natives are loaded. */

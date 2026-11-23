@@ -25,7 +25,7 @@ Aplikasi Android document scanner yang menghasilkan gambar setara hasil scanner 
 
 ## Tech stack
 
-Kotlin 2.0, Jetpack Compose (Material 3), MVVM + Clean Architecture, Hilt, Coroutines/Flow, CameraX, OpenCV 4.9.0, Room, LiteRT (TFLite) untuk model opsional, `PdfDocument` untuk export.
+Kotlin 2.0, Jetpack Compose (Material 3), MVVM + Clean Architecture, Hilt, Coroutines/Flow, CameraX, OpenCV 4.14.0, Room, LiteRT (TFLite) untuk model opsional, `PdfDocument` untuk export.
 minSdk 24, targetSdk/compileSdk 35. Versi lengkap ada di [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 
 ## Struktur modul
@@ -61,7 +61,7 @@ Di Windows gunakan `gradlew.bat`. Setelah `:core:imaging:test`, contact sheet vi
 Catatan:
 - APK debug berukuran besar (~139 MB) karena OpenCV native untuk 4 ABI. Build release membatasi ke `arm64-v8a` dan `armeabi-v7a`.
 - Build release saat ini ditandatangani dengan keystore debug, khusus untuk uji lokal. Ganti dengan keystore rilis sebelum distribusi.
-- OpenCV dipin ke 4.9.0 karena artefak desktop untuk test JVM (`org.openpnp:opencv`) hanya tersedia sampai versi itu.
+- OpenCV 4.14.0: AAR Android-nya 16 KB page-aligned (syarat Google Play untuk target Android 15+). Test JVM memakai build desktop bytedeco dengan versi OpenCV yang sama (`org.bytedeco:opencv:4.14.0-1.5.14`); keduanya harus selalu dinaikkan bersamaan.
 
 ## Dokumentasi
 

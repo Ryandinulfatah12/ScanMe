@@ -12,10 +12,13 @@ hiltNavigationCompose = "1.2.0"
 camerax = "1.4.1"
 room = "2.6.1"
 coroutines = "1.9.0"
-# OpenCV: Android AAR and desktop (JVM test) artifacts MUST share major.minor.
-# org.openpnp:opencv tops out at 4.9.0, so both are pinned to 4.9.0.
-opencv = "4.9.0"
-opencvDesktop = "4.9.0-0"
+# OpenCV: Android AAR and desktop (JVM test) artifacts MUST be the same OpenCV version.
+# 4.12+ AARs ship 16 KB page-aligned natives (Play requirement for Android 15+ targets); 4.9.0 did not.
+# Desktop natives come from bytedeco (same OpenCV version + JavaCPP build number).
+opencv = "4.14.0"
+opencvDesktop = "4.14.0-1.5.14"
+javacpp = "1.5.14"
+openblasDesktop = "0.3.34-1.5.14"
 junit = "4.13.2"
 
 compileSdk = "35"
@@ -49,7 +52,9 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 opencv-android = { module = "org.opencv:opencv", version.ref = "opencv" }
-opencv-desktop = { module = "org.openpnp:opencv", version.ref = "opencvDesktop" }
+opencv-desktop = { module = "org.bytedeco:opencv", version.ref = "opencvDesktop" }
+openblas-desktop = { module = "org.bytedeco:openblas", version.ref = "openblasDesktop" }
+javacpp = { module = "org.bytedeco:javacpp", version.ref = "javacpp" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 
