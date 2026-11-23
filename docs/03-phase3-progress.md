@@ -60,9 +60,16 @@ Contact sheet visual per kategori: `core/imaging/build/test-output/pipeline_*.pn
   Halaman dibiarkan apa adanya bila < 3 baris, lengkung < 0,4% (halaman datar), atau > 15% (fit tidak masuk akal). Toggle "Lurus" di layar review (default on), ikut ke export PDF.
   Keterbatasan: hanya koreksi vertikal — kompresi horizontal dekat punggung buku tetap (opsi B / model 3D bila perlu); beberapa piksel artefak border di tepi atas halaman yang tepinya melengkung; kertas kusut lokal tidak terkoreksi (polinomial global).
 
+- **Langkah 5 selesai** —
+  - Dokumen tersimpan: `RoomDocumentRepository` (Room + foto di `filesDir/documents/<id>/`). "Simpan" menulis ulang semua halaman dalam satu transaksi; foto dari cache kamera disalin masuk, foto yang tidak dipakai lagi dihapus setelah commit. Editor hanya menghapus file cache miliknya sendiri, jadi menutup editor tanpa menyimpan tidak pernah merusak dokumen tersimpan.
+  - Home: daftar dokumen (thumbnail, jumlah halaman, tanggal), buka untuk diedit, ganti nama, hapus (dengan konfirmasi).
+  - Editor (layar review): slider intensitas filter, pindah urutan halaman (‹ ›), simpan JPG per halaman ke Pictures/ScanMe (tanpa kompres ulang), tombol Simpan; menutup dengan perubahan belum disimpan → dialog Simpan/Buang.
+  - Layar About: versi + daftar lisensi pustaka yang ikut di APK (semua Apache 2.0).
+  - Skema Room berubah (kolom `photoRotation`, `thumbnailPath`) tanpa menaikkan versi DB: belum pernah ada yang menulis ke DB sebelumnya. Mulai sekarang perubahan skema butuh migrasi.
+
 ## 6. Langkah berikutnya
 
 1. Validasi dengan foto nyata (buku, bayangan, kusut, background ramai) lewat halaman debug; ukur waktu di device mid-range.
-2. Editor (drag sudut + loupe, slider intensitas) dan daftar dokumen tersimpan (Room, rename, reorder).
-3. Layar About dengan daftar lisensi.
-4. Dewarp ML (opsi B) setelah lisensi model terverifikasi.
+2. Uji alur dokumen di HP: scan → simpan → buka lagi → ubah urutan/filter → simpan; hapus dokumen.
+3. Dewarp ML (opsi B) setelah lisensi model terverifikasi.
+4. OCR (opsional, ML Kit).

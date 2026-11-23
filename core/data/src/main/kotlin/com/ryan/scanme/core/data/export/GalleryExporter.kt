@@ -2,7 +2,6 @@ package com.ryan.scanme.core.data.export
 
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -18,10 +17,10 @@ class GalleryExporter @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
     /**
-     * Saves [bitmap] as JPEG. Android 10+: Pictures/ScanMe in the shared gallery (no permission needed).
-     * Android 7-9: the app's own Pictures folder, which needs no storage permission either.
+     * Copies an already encoded JPEG (no re-compression). Android 10+: Pictures/ScanMe in the shared
+     * gallery (no permission needed). Android 7-9: the app's own Pictures folder, which needs none either.
      */
-    fun saveJpeg(bitmap: Bitmap, displayName: String, quality: Int = 92): Uri {
+    fun saveJpeg(jpeg: File, displayName: String): Uri {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val resolver = context.contentResolver
             val values = ContentValues().apply {
@@ -33,7 +32,7 @@ class GalleryExporter @Inject constructor(
             val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
                 ?: throw IOException("MediaStore insert failed")
             try {
-                resolver.openOutputStream(uri)?.use { bitmap.compress(Bitmap.CompressFormat.JPEG, quality, it) }
+                resolver.openOutputStream(uri)?.use { out -> jpeg.inputStream().use { it.copyTo(out) } }
                     ?: throw IOException("Cannot open $uri")
                 values.clear()
                 values.put(MediaStore.Images.Media.IS_PENDING, 0)
@@ -46,7 +45,7 @@ class GalleryExporter @Inject constructor(
         }
         val dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir
         val file = File(dir, "$displayName.jpg")
-        file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, quality, it) }
+        jpeg.copyTo(file, overwrite = true)
         return Uri.fromFile(file)
     }
 }

@@ -30,6 +30,7 @@ data class PageEntity(
     val documentId: Long,
     val orderIndex: Int,
     val originalPath: String,
+    val photoRotation: Int,
     /** tl.x,tl.y,tr.x,tr.y,br.x,br.y,bl.x,bl.y (normalized). */
     val quad: String,
     val rotationDegrees: Int,
@@ -37,7 +38,5 @@ data class PageEntity(
     val filterPreset: String,
     val filterIntensity: Double,
     val focalLengthPx: Double?,
-    val processedPath: String?,
-    /** Bumped whenever geometry changes, invalidating the corrected/processed caches. */
-    val processedVersion: Int,
+    val thumbnailPath: String?,
 )

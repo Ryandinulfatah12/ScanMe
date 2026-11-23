@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,11 +11,14 @@ interface DocumentDao {
     @Query("SELECT * FROM documents ORDER BY updatedAt DESC")
     fun observeDocuments(): Flow<List<DocumentEntity>>
 
+    @Query("SELECT * FROM pages ORDER BY documentId, orderIndex")
+    fun observeAllPages(): Flow<List<PageEntity>>
+
     @Query("SELECT * FROM documents WHERE id = :id")
-    fun observeDocument(id: Long): Flow<DocumentEntity?>
+    suspend fun document(id: Long): DocumentEntity?
 
     @Query("SELECT * FROM pages WHERE documentId = :documentId ORDER BY orderIndex")
-    fun observePages(documentId: Long): Flow<List<PageEntity>>
+    suspend fun pages(documentId: Long): List<PageEntity>
 
     @Insert
     suspend fun insertDocument(document: DocumentEntity): Long
@@ -28,19 +30,19 @@ interface DocumentDao {
     suspend fun deleteDocument(id: Long)
 
     @Insert
-    suspend fun insertPage(page: PageEntity): Long
+    suspend fun insertPages(pages: List<PageEntity>)
 
-    @Update
-    suspend fun updatePage(page: PageEntity)
+    @Query("DELETE FROM pages WHERE documentId = :documentId")
+    suspend fun deletePagesOf(documentId: Long)
 
-    @Query("UPDATE pages SET orderIndex = :index WHERE id = :pageId")
-    suspend fun setPageOrder(pageId: Long, index: Int)
+    @Query("UPDATE documents SET updatedAt = :now WHERE id = :id")
+    suspend fun touch(id: Long, now: Long)
 
+    /** Pages are small rows; rewriting them all keeps order, deletions and edits consistent in one step. */
     @Transaction
-    suspend fun reorder(pageIdsInOrder: List<Long>) {
-        pageIdsInOrder.forEachIndexed { index, id -> setPageOrder(id, index) }
+    suspend fun replacePages(documentId: Long, pages: List<PageEntity>, now: Long) {
+        deletePagesOf(documentId)
+        insertPages(pages)
+        touch(documentId, now)
     }
-
-    @Query("DELETE FROM pages WHERE id = :pageId")
-    suspend fun deletePage(pageId: Long)
 }

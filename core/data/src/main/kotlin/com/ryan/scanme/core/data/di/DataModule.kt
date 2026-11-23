@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.ryan.scanme.core.data.db.DocumentDao
 import com.ryan.scanme.core.data.db.ScanMeDatabase
+import com.ryan.scanme.core.data.repository.RoomDocumentRepository
+import com.ryan.scanme.core.domain.repository.DocumentRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,4 +24,11 @@ object DataModule {
 
     @Provides
     fun documentDao(db: ScanMeDatabase): DocumentDao = db.documentDao()
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    abstract fun documentRepository(impl: RoomDocumentRepository): DocumentRepository
 }

@@ -51,6 +51,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun ScannerScreen(
     startWithImport: Boolean,
+    /** Saved document to edit (read by the ViewModel from the nav arguments); only changes start-up here. */
+    openingDocument: Boolean,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ScannerViewModel = hiltViewModel(),
@@ -75,7 +77,7 @@ fun ScannerScreen(
         if (startWithImport && !importLaunched) {
             importLaunched = true
             openPicker()
-        } else if (!cameraGranted) {
+        } else if (!cameraGranted && !openingDocument) {
             permission.launch(Manifest.permission.CAMERA)
         }
     }
@@ -86,7 +88,7 @@ fun ScannerScreen(
         }
     }
 
-    val close = { if (pages.isNotEmpty()) confirmDiscard = true else onClose() }
+    val close = { if (viewModel.hasUnsavedChanges()) confirmDiscard = true else onClose() }
     val debuggable = remember { context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 }
 
     Box(modifier.fillMaxSize().background(Color.Black)) {
@@ -119,16 +121,28 @@ fun ScannerScreen(
     if (confirmDiscard) {
         AlertDialog(
             onDismissRequest = { confirmDiscard = false },
-            title = { Text("Buang ${pages.size} halaman?") },
-            text = { Text("Halaman yang belum disimpan atau dibagikan akan hilang.") },
+            title = { Text(if (pages.isEmpty()) "Buang perubahan?" else "Simpan perubahan?") },
+            text = {
+                Text(
+                    if (pages.isEmpty()) "Semua halaman dihapus. Dokumen tersimpan tidak diubah."
+                    else "${pages.size} halaman belum disimpan ke daftar dokumen.",
+                )
+            },
             confirmButton = {
+                if (pages.isNotEmpty()) {
+                    TextButton(onClick = {
+                        confirmDiscard = false
+                        viewModel.save(then = onClose)
+                    }) { Text("Simpan") }
+                }
+            },
+            dismissButton = {
                 TextButton(onClick = {
                     confirmDiscard = false
                     viewModel.discardAll()
                     onClose()
                 }) { Text("Buang", color = ScanMeColors.Danger) }
             },
-            dismissButton = { TextButton(onClick = { confirmDiscard = false }) { Text("Batal") } },
         )
     }
 }

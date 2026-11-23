@@ -24,7 +24,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.AddPhotoAlternate
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material3.Slider
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableFloatStateOf
+import kotlin.math.roundToInt
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Crop
@@ -89,9 +96,21 @@ internal fun ReviewContent(
             IconButton(onClick = onClose) { Icon(Icons.Outlined.Close, contentDescription = "Tutup", tint = ScanMeColors.Ink) }
             Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("Dokumen", style = MaterialTheme.typography.titleMedium, color = ScanMeColors.Ink)
-                Text("Halaman ${state.index + 1} dari ${pages.size}", style = MaterialTheme.typography.labelSmall, color = ScanMeColors.Muted)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (pages.size > 1) {
+                        IconButton(onClick = { viewModel.movePage(-1) }, enabled = state.index > 0, modifier = Modifier.size(28.dp)) {
+                            Icon(Icons.AutoMirrored.Outlined.KeyboardArrowLeft, contentDescription = "Pindah ke depan", tint = ScanMeColors.Muted)
+                        }
+                    }
+                    Text("Halaman ${state.index + 1} dari ${pages.size}", style = MaterialTheme.typography.labelSmall, color = ScanMeColors.Muted)
+                    if (pages.size > 1) {
+                        IconButton(onClick = { viewModel.movePage(1) }, enabled = state.index < pages.lastIndex, modifier = Modifier.size(28.dp)) {
+                            Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = "Pindah ke belakang", tint = ScanMeColors.Muted)
+                        }
+                    }
+                }
             }
-            Spacer(Modifier.width(48.dp))
+            TextButton(onClick = { viewModel.save() }, enabled = state.busy == null) { Text("Simpan", color = ScanMeColors.Accent) }
         }
 
         // Page preview with the floating share button
@@ -167,6 +186,20 @@ internal fun ReviewContent(
         }
 
         FilterRow(selected = page.preset, onSelect = viewModel::selectPreset)
+        if (page.preset != FilterPreset.ORIGINAL) {
+            // Local value while dragging; the page is re-rendered once the finger lifts.
+            var intensity by remember(page.id, page.intensity) { mutableFloatStateOf(page.intensity.toFloat()) }
+            Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("Intensitas", style = MaterialTheme.typography.labelMedium, color = ScanMeColors.Muted)
+                Slider(
+                    value = intensity,
+                    onValueChange = { intensity = it },
+                    onValueChangeFinished = { viewModel.setIntensity(intensity.toDouble()) },
+                    modifier = Modifier.weight(1f).padding(horizontal = 12.dp),
+                )
+                Text("${(intensity * 100).roundToInt()}%", style = MaterialTheme.typography.labelMedium, color = ScanMeColors.Ink, modifier = Modifier.width(40.dp))
+            }
+        }
 
         // Bottom toolbar
         Row(
@@ -210,6 +243,10 @@ internal fun ReviewContent(
                 ShareOption(Icons.Outlined.Download, "Simpan ke Download", "Folder Download/ScanMe", ScanMeColors.Ink) {
                     showShare = false
                     viewModel.savePdf()
+                }
+                ShareOption(Icons.Outlined.Image, "Simpan JPG ke Galeri", "Satu gambar per halaman, Pictures/ScanMe", ScanMeColors.Ink) {
+                    showShare = false
+                    viewModel.saveJpg()
                 }
             }
         }
